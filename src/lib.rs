@@ -13,9 +13,16 @@ pub fn read_file(config: &Config) -> Vec<Lift> {
     return lifts;
 }
 
-pub fn write_file(config: &Config, lifts: &[Lift]) -> Result<(), &'static str> {
+pub fn write_file(config: &Config, lifts: &Vec<Lift>) -> Result<(), &'static str> {
     //
     // fs::write(config.file_path, lifts);
+    let mut data = String::new();
+    for lift in lifts {
+        data.push_str(&lift.to_string());
+        data.push('\n');
+    }
+    fs::write(&config.file_path, &data).unwrap();
+    println!("{}", data);
     Ok(())
 }
 
@@ -82,7 +89,14 @@ impl Lift {
         }
     }
     pub fn print(&self) {
-        println!("{:?}", self);
+        println!("{}", self.to_string());
+    }
+    pub fn to_string(&self) -> String {
+        format!(
+            "{} {} {} {}",
+            self.name, self.location, self.maintenance, self.next_maintenance
+        )
+        //
     }
 }
 
@@ -91,7 +105,8 @@ pub fn run() {
     let mut lifts = read_file(&config);
     let lift = Lift::new();
     lifts.push(lift);
-    for lift in lifts {
+    for lift in &lifts {
         lift.print();
     }
+    write_file(&config, &lifts).unwrap();
 }
