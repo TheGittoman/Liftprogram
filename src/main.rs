@@ -7,6 +7,8 @@
 // hissi1 porvoo 10.10.2023 10.4.2024
 // the program should be able to read new lifts and able to tell
 // when the next one should be fixed (4 months periods)
+// add edit delete fix options
+// ability to search lifts that have maintenance in certain time in future (1month etc.)
 
 use chrono::{Date, DateTime, NaiveDate};
 use database;

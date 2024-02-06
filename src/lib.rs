@@ -1,6 +1,28 @@
 use chrono::{DateTime, NaiveDate};
 use std::{error::Error, fs, str::FromStr};
 
+pub fn search(lifts: &Vec<Lift>, search_term: &str, sflag: char) -> Result<(), &'static str> {
+    //
+    match sflag {
+        't' => {
+            for lift in lifts {
+                if lift.next_maintenance < NaiveDate::from_str(search_term).unwrap() {
+                    println!("{}", lift.to_string());
+                }
+            }
+        }
+        'n' => {
+            for lift in lifts {
+                if lift.location == search_term || lift.name == search_term {
+                    println!("{}", lift.to_string());
+                }
+            }
+        }
+        _ => return Err("No valid flag profided for searc"),
+    }
+    Ok(())
+}
+
 pub fn read_file(config: &Config) -> Vec<Lift> {
     // load in file in string
     let contents = fs::read_to_string(&config.file_path)
@@ -103,10 +125,8 @@ impl Lift {
 pub fn run() {
     let config = Config::build("option".to_string(), "hissit.txt".to_string());
     let mut lifts = read_file(&config);
-    let lift = Lift::new();
-    lifts.push(lift);
-    for lift in &lifts {
-        lift.print();
-    }
-    write_file(&config, &lifts).unwrap();
+    // let lift = Lift::new();
+    // lifts.push(lift);
+    // write_file(&config, &lifts).unwrap();
+    search(&lifts, "2025-1-1", 't').unwrap();
 }
